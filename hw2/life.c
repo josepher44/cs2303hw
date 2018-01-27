@@ -1,9 +1,19 @@
 /* Game of Life
 */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include "twoD.h"
+#include "life.h"
+
+/** Read initial board from file
+ *  @param input File to read the initial board state from
+ */
+
+void readBoard(FILE input)
+{
+
+}
+
 
 /** Main function.
  * @param argc Number of words on the command line.
@@ -66,14 +76,6 @@ int main(int argc, char **argv) {
 	*/
 	gridA = make2Dchar(rows, columns);
 
-	for(i=0; i<rows; i++)
-	{
-		gridA[0][i]=(char)i+65;
-	}
-	for(i=0; i<rows; i++)
-	{
-		printf("%c", gridA[0][i]);
-	}
 
 
 	/* Eventually, need to try to open the input file.
@@ -87,6 +89,15 @@ int main(int argc, char **argv) {
 	{
 		printf("file successfully read\n");
 	}
+	char str[columns*rows];
+	while (fgets(str, sizeof str, input))
+	{
+
+		printf("%s", str);
+		printf("%d", (int)str[190]);
+		printf("%d", (int)str[0]);
+	}
+
 
 	/*Once opened, you can read from the file one character at a time with fgetc().
 	 * You can read one line at a time using fgets().
