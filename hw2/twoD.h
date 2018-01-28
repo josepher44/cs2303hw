@@ -10,5 +10,8 @@
 // Function prototypes:
 int** make2Dint(int rows, int columns);
 char** make2Dchar(int rows, int columns);
+void printCharArray(char** array, int rows, int columns);
+struct coordinate findCentroid(char** array, int rows, int columns);
+char** centerPattern(char** array, int rows, int columns);
 
 #endif /* 2D_H_ */
