@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "twoD.h"
 
+/*
+ * File contains functions for directly manipulating and creating 2d Arrays
+ */
+
 /** Make a 2D array of integers
  *
  * @param rows Number of rows
@@ -23,7 +27,6 @@ int** make2Dint(int rows, int columns) {
 	if (!a)
 	{ // Unable to allocate the array
 		return (int **) NULL;
-		printf("first null");
 	}
 
 	// Now allocate array for each row
@@ -32,10 +35,8 @@ int** make2Dint(int rows, int columns) {
 		a[i] = malloc(columns * sizeof (int));
 		if (!a[i]) {
 			return (int **) NULL; // Unable to allocate
-			printf("second null");
 		}
 	}
-	printf("not null");
 	int test = (int)sizeof(a)/sizeof(a[0][0]);
 	printf("%d\n", test);
 	return a;
@@ -103,9 +104,18 @@ struct coordinate
 	int y;
 };
 
+
+/** Centers an array relative to the base grid
+ *
+ * @param array The array to center
+ * @param rows Number of rows the base grid has
+ * @param columns Number of columns the base grid has
+ * @return The centered array
+ */
 char** centerPattern(char** array, int rows, int columns)
 {
-	printf("started centering the pattern");
+	//Declare variables. xshift and yshift represent the amounts to shift the
+	//pattern. i and j are loop increments
 	int xshift;
 	int yshift;
 	int i;
@@ -114,22 +124,24 @@ char** centerPattern(char** array, int rows, int columns)
 	struct coordinate centroid;
 
 	centroid = findCentroid(array, rows, columns);
-	printf("centroid x is %d, centroid y is %d", centroid.x, centroid.y);
-	printf("found the centroid");
+
 
 	xshift = (columns-centroid.x)/2;
 	yshift = (rows-centroid.y)/2;
-	printf("xshift is %d, yshift is %d\n\n\n", xshift, yshift);
 	if(xshift>0)
 	{
 		for (j=0; j<rows; j++)
 		{
+			//At the start of this loop, j represents the row to shift
 			for(i=columns-xshift-1; i>=0; i--)
 			{
+				//at the start of this loop, i represents the column to shift
 				array[j][i+xshift]=array[j][i];
 			}
 			for(i=0; i<xshift; i++)
 			{
+				//At the start of this loop, i represents the cell to write
+				//blank
 				array[j][i]=' ';
 			}
 		}
@@ -138,12 +150,16 @@ char** centerPattern(char** array, int rows, int columns)
 	{
 		for (j=0; j<rows; j++)
 		{
+			//At the start of this loop, j represents the row to shift
 			for(i=xshift; i<rows; i++)
 			{
+				//at the start of this loop, i represents the column to shift
 				array[j][i+xshift]=array[j][i];
 			}
 			for(i=rows-1; i>rows-1+xshift; i--)
 			{
+				//At the start of this loop, i represents the cell to write
+				//blank
 				array[j][i]=' ';
 			}
 		}
@@ -153,12 +169,16 @@ char** centerPattern(char** array, int rows, int columns)
 	{
 		for (j=0; j<columns; j++)
 		{
+			//At the start of this loop, j represents the column to shift
 			for(i=rows-yshift-1; i>=0; i--)
 			{
+				//at the start of this loop, i represents the row to shift
 				array[i+yshift][j]=array[i][j];
 			}
 			for(i=0; i<yshift; i++)
 			{
+				//At the start of this loop, i represents the cell to write
+				//blank
 				array[i][j]=' ';
 			}
 		}
@@ -167,12 +187,16 @@ char** centerPattern(char** array, int rows, int columns)
 	{
 		for (j=0; j<columns; j++)
 		{
+			//At the start of this loop, j represents the column to shift
 			for(i=yshift; i<columns; i++)
 			{
+				//at the start of this loop, i represents the row to shift
 				array[i+yshift][j]=array[i][j];
 			}
 			for(i=columns-1; i>columns-1+yshift; i--)
 			{
+				//At the start of this loop, i represents the cell to write
+				//blank
 				array[i][j]=' ';
 			}
 		}
@@ -182,6 +206,14 @@ char** centerPattern(char** array, int rows, int columns)
 
 }
 
+
+/** Finds the geometric center of an array
+ *
+ * @param array The array to locate the center of
+ * @param rows Number of rows the array has
+ * @param columns Number of columns the base grid has
+ * @return The x and y coordinate of the centroid
+ */
 struct coordinate findCentroid(char** array, int rows, int columns)
 {
 	//Declare variables. i and j are loop incrementors
@@ -196,8 +228,10 @@ struct coordinate findCentroid(char** array, int rows, int columns)
 
 	for(i=0; i<rows; i++)
 	{
+		//At the start of this loop, i is the row to be checked
 		for(j=0; j<columns; j++)
 		{
+			//At the start of this loop, j is the column to be checked
 			if(array[i][j]=='x')
 			{
 				//For first value, set minimum and maximum no matter what
@@ -229,9 +263,43 @@ struct coordinate findCentroid(char** array, int rows, int columns)
 			}
 		}
 	}
-	printf("min_x: %d\nmax_x: %d\nmin_y: %d\nmax_y: %d", min_x, max_x, min_y, max_y);
 	struct coordinate output = {(max_x+min_x), (max_y+min_y)};
 	return output;
-	//Compute the average x and y location of a filled cell
+}
 
+/**
+ * Checks the equality of two 2d arrays of known dimensions by comparing all
+ * their elements
+ * @param array1 The first array to compare
+ * @param array2 The second array to compare
+ * @param rows The row count of both arrays
+ * @param columns The column count of both arrays
+ * @return 1 if the arrays are equal, 0 if they are not
+ */
+int checkEquality(char** array1, char** array2, int rows, int columns)
+{
+	//Declare variables. i and j are loop incrementors
+	int i;
+	int j;
+
+	for(i=0; i<rows; i++)
+	{
+		/*
+		 * At the start of this loop, i represents the row being checked
+		 */
+		for(j=0; j<columns; j++)
+		{
+			/*
+			 * At the start of this loop, i and j represent the y and x
+			 * coordinates to be evaluated
+			 */
+			if(array1[i][j]!=array2[i][j])
+			{
+				//If any elements do not match, immediately return 0
+				return 0;
+			}
+		}
+	}
+	//Only reached if all elements are equal
+	return 1;
 }

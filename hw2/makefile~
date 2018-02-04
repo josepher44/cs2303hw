@@ -9,10 +9,10 @@ life: life.o twoD.o
 	gcc $(CFLAGS) life.o twoD.o -o life
 
 # Rules for building each object file.
-life.o: life.c twoD.h life.h
+life.o: life.c twoD.h
 	gcc $(CFLAGS) -c life.c
 
-twoD.o: twoD.c twoD.h life.h
+twoD.o: twoD.c twoD.h
 	gcc $(CFLAGS) -c twoD.c
 
 # Give command "make clean" to remove object files,
